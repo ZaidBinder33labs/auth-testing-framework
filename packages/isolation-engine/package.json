@@ -1,0 +1,13 @@
+{
+  "name": "@atf/isolation-engine",
+  "version": "1.0.0",
+  "description": "Tenant and session isolation validation",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": { "test": "node --test tests" },
+  "dependencies": {
+    "@atf/tenant-core": "*",
+    "@atf/state-diff": "*"
+  },
+  "license": "MIT"
+}

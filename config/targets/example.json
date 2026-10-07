@@ -1,0 +1,65 @@
+{
+  "name": "example",
+  "displayName": "Example application (deliberately unlike Binder)",
+  "version": "0.1.0",
+  "description": "A worked example of a target that shares nothing with the binder descriptor: different paths, different field names, the refresh token in the JSON body instead of an HttpOnly cookie, expiry as a duration rather than a timestamp, rotation off, a logout that answers 200, and different JWT claims. It exists so 'application-agnostic' is a tested claim rather than a slogan. No such application is deployed; it is driven by a scripted transport.",
+  "auth": {
+    "loginPath": "/v2/session/start",
+    "refreshPath": "/v2/session/renew",
+    "logoutPath": "/v2/session/end",
+    "mePath": "/v2/whoami",
+    "accessPath": "/v2/whoami/grants",
+    "loginFields": {
+      "email": "user_name",
+      "password": "secret"
+    },
+    "cookieAuth": false,
+    "rotationEnabled": false,
+    "globalLogout": false,
+    "logoutSuccessStatus": 200,
+    "fields": {
+      "accessToken": "session_token",
+      "refreshToken": "renew_token",
+      "expires": "ttl_seconds",
+      "expiresFormat": "seconds",
+      "tokenType": "token_kind"
+    },
+    "claims": {
+      "tenant": "tenant",
+      "user": "actor"
+    },
+    "userFields": {
+      "userId": "id",
+      "email": "login",
+      "username": "handle",
+      "firstName": "given_name",
+      "lastName": "family_name",
+      "designation": "role_title",
+      "userType": "principal_kind",
+      "tenantId": "tenant_id",
+      "tenantName": "tenant_label",
+      "tenantSlug": "tenant_key",
+      "tenantLogoUrl": "tenant_banner",
+      "subscriptionStatus": "plan_state",
+      "seatLimit": "seat_cap",
+      "seatsUsed": "seats_taken",
+      "trialEndsAt": "trial_until",
+      "buyerScopeMode": "purchaser_scope",
+      "isTenantAdmin": "tenant_admin",
+      "companySetupRequired": "onboarding_needed"
+    },
+    "accessFields": {
+      "screenCode": "screen_key",
+      "moduleCode": "module_key",
+      "scope": "reach",
+      "level": "tier",
+      "canApprove": "may_approve",
+      "canDelete": "may_remove"
+    }
+  },
+  "redis": {
+    "sessionPrefix": "session/",
+    "tokenPrefix": "bearer/",
+    "tenantPrefix": "org/"
+  }
+}

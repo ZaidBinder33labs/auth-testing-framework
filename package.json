@@ -1,0 +1,48 @@
+{
+  "name": "auth-testing-framework",
+  "version": "1.0.0",
+  "description": "Application-agnostic multi-tenant authentication + Redis testing framework (monorepo)",
+  "private": true,
+  "type": "commonjs",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "install:all": "npm install",
+    "build": "node tools/build.js",
+    "test:unit": "node --test-force-exit tools/run-tests.js packages",
+    "test:contract": "node --test-force-exit tools/run-tests.js packages/adapters/tests/contract.test.js packages/adapters/tests/credential-auth.test.js",
+    "test:integration": "node --test-force-exit tools/run-tests.js tests/integration",
+    "test:multitenant": "node --test-force-exit tools/run-tests.js tests/multitenant",
+    "test:redis:integration": "node --test-force-exit tools/run-tests.js tests/redis-integration",
+    "test:reporting": "node --test-force-exit tools/run-tests.js packages/reporting/tests",
+    "test:security": "node --test-force-exit tools/run-tests.js tests/security",
+    "test:redis": "node --test-force-exit tools/run-tests.js tests/redis",
+    "test:redis:dev": "node --test-force-exit tools/run-dev-tests.js tests/redis",
+    "redis:smoke": "node tools/redis-smoke.js",
+    "test:tenancy": "node --test-force-exit tools/run-tests.js tests/tenancy",
+    "test:concurrency": "node --test-force-exit tools/run-tests.js tests/concurrency",
+    "test:auth": "node --test-force-exit tools/run-tests.js tests/authentication tests/session tests/token",
+    "test:lifecycle": "node --test-force-exit tools/run-tests.js tests/lifecycle",
+    "test:self": "node --test-force-exit tools/run-tests.js tests/selftest",
+    "test:all": "node --test-force-exit tools/run-tests.js packages tests",
+    "test:summary": "node --test-reporter=spec --test-force-exit tools/run-tests.js packages tests",
+    "lint": "node tools/lint.js",
+    "selftest": "node --test-force-exit tools/run-tests.js packages tests",
+    "qa:report": "node tools/qa-report/index.js",
+    "qa:report:redis": "node tools/qa-report/index.js --redis",
+    "qa:report:all": "node tools/qa-report/index.js --redis --http"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "ioredis": "^5.4.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.48.0",
+    "eslint": "^8.57.0"
+  },
+  "license": "MIT"
+}

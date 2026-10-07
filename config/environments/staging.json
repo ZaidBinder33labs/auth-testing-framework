@@ -1,0 +1,23 @@
+{
+  "name": "staging",
+  "displayName": "Staging",
+  "target": "binder",
+  "policy": "read-only",
+  "production": false,
+  "redis": {
+    "mode": "READ_ONLY",
+    "namespace": "qa:staging",
+    "urlEnvVar": "STAGING_REDIS_URL",
+    "tls": true,
+    "db": null
+  },
+  "credentials": {
+    "emailEnvVar": "BINDER_STAGING_EMAIL",
+    "passwordEnvVar": "BINDER_STAGING_PASSWORD",
+    "accountIdentityEnvVar": "BINDER_STAGING_ACCOUNT_IDENTITY"
+  },
+  "verification": {
+    "httpExpected": true,
+    "redisExpected": true
+  }
+}

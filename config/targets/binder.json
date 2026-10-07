@@ -1,0 +1,65 @@
+{
+  "name": "binder",
+  "displayName": "Binder onboarding API",
+  "version": "1.0.0",
+  "description": "Binder's session contract, verified against the onboarding service. What the application IS; the environment supplies the host.",
+  "auth": {
+    "loginPath": "/api/v1/auth/login",
+    "refreshPath": "/api/v1/auth/refresh",
+    "logoutPath": "/api/v1/auth/logout",
+    "mePath": "/api/v1/auth/me",
+    "accessPath": "/api/v1/auth/me/access",
+    "loginFields": {
+      "email": "email",
+      "password": "password"
+    },
+    "cookieAuth": true,
+    "rotationEnabled": true,
+    "globalLogout": true,
+    "logoutSuccessStatus": 204,
+    "fields": {
+      "accessToken": "access_token",
+      "refreshToken": "refresh_token",
+      "expires": "expires_at",
+      "expiresFormat": "datetime",
+      "tokenType": "token_type"
+    },
+    "claims": {
+      "tenant": "tid",
+      "user": "sub"
+    },
+    "userFields": {
+      "userId": "user_id",
+      "email": "email",
+      "username": "username",
+      "firstName": "first_name",
+      "lastName": "last_name",
+      "designation": "designation",
+      "userType": "user_type",
+      "tenantId": "tenant_id",
+      "tenantName": "tenant_name",
+      "tenantSlug": "tenant_slug",
+      "tenantLogoUrl": "tenant_logo_url",
+      "subscriptionStatus": "subscription_status",
+      "seatLimit": "seat_limit",
+      "seatsUsed": "seats_used",
+      "trialEndsAt": "trial_ends_at",
+      "buyerScopeMode": "buyer_scope_mode",
+      "isTenantAdmin": "is_tenant_admin",
+      "companySetupRequired": "company_setup_required"
+    },
+    "accessFields": {
+      "screenCode": "screen_code",
+      "moduleCode": "module_code",
+      "scope": "scope",
+      "level": "level",
+      "canApprove": "can_approve",
+      "canDelete": "can_delete"
+    }
+  },
+  "redis": {
+    "sessionPrefix": "sess:",
+    "tokenPrefix": "tok:",
+    "tenantPrefix": "ten:"
+  }
+}

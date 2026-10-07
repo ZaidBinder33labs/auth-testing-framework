@@ -1,0 +1,12 @@
+{
+  "name": "full",
+  "displayName": "Full",
+  "description": "Every capability granted. Appropriate for a dedicated test account on a non-production environment that the suite is allowed to mutate.",
+  "capabilities": {
+    "mutatesOwnSession": true,
+    "mutatesRedis": true,
+    "concurrentLoad": true,
+    "tokenRotation": true,
+    "ttlWaits": true
+  }
+}

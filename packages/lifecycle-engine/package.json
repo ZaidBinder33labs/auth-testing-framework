@@ -1,0 +1,14 @@
+{
+  "name": "@atf/lifecycle-engine",
+  "version": "1.0.0",
+  "description": "BEFORE/AFTER scenario engine for auth + Redis state testing",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": { "test": "node --test tests" },
+  "dependencies": {
+    "@atf/state-diff": "*",
+    "@atf/reporting": "*",
+    "@atf/isolation-engine": "*"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,23 @@
+{
+  "name": "dev",
+  "displayName": "Developer machine",
+  "target": "binder",
+  "policy": "full",
+  "production": false,
+  "redis": {
+    "mode": "MOCK_REDIS",
+    "namespace": "qa:dev",
+    "urlEnvVar": "REDIS_URL",
+    "tls": false,
+    "db": null
+  },
+  "credentials": {
+    "emailEnvVar": "BINDER_DEV_EMAIL",
+    "passwordEnvVar": "BINDER_DEV_PASSWORD",
+    "accountIdentityEnvVar": "BINDER_DEV_ACCOUNT_IDENTITY"
+  },
+  "verification": {
+    "httpExpected": true,
+    "redisExpected": false
+  }
+}

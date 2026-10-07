@@ -1,0 +1,9 @@
+{
+  "name": "@atf/http-transport",
+  "version": "1.0.0",
+  "description": "Application-agnostic HTTP transport: cookie-keeping request context, bearer auth, 429 retry, JSON parse with text fallback",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": { "test": "node --test tests" },
+  "license": "MIT"
+}

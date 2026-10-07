@@ -1,0 +1,9 @@
+{
+  "name": "@atf/target-config",
+  "version": "1.0.0",
+  "description": "Target descriptors: what an application IS (endpoint paths, token and refresh field names, expiry format, rotation, cookie vs body refresh, logout semantics, Redis key prefixes)",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": { "test": "node --test tests" },
+  "license": "MIT"
+}

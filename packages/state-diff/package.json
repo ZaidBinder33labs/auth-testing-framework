@@ -1,0 +1,10 @@
+{
+  "name": "@atf/state-diff",
+  "version": "1.0.0",
+  "description": "Before/after snapshot diff engine for Redis state",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": { "test": "node --test tests" },
+  "dependencies": {},
+  "license": "MIT"
+}

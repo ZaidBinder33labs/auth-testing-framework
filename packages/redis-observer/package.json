@@ -1,0 +1,12 @@
+{
+  "name": "@atf/redis-observer",
+  "version": "1.0.0",
+  "description": "Read-only Redis observation: keys, types, TTLs, fingerprints, metadata",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": { "test": "node --test tests" },
+  "dependencies": {
+    "ioredis": "^5.4.0"
+  },
+  "license": "MIT"
+}

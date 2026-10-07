@@ -1,0 +1,12 @@
+{
+  "name": "read-only",
+  "displayName": "Read only",
+  "description": "No capability is granted. Nothing is mutated, no session is ended, no token is invalidated and no key is waited out. Tests needing any capability report BLOCKED with the capability named.",
+  "capabilities": {
+    "mutatesOwnSession": false,
+    "mutatesRedis": false,
+    "concurrentLoad": false,
+    "tokenRotation": false,
+    "ttlWaits": false
+  }
+}

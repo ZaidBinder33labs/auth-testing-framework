@@ -1,0 +1,78 @@
+name: Auth QA
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 16379:6379
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run all tests
+        run: npm run test:all
+        env:
+          REDIS_URL: redis://localhost:16379
+          REDIS_MODE: READ_ONLY
+          BINDER_CI_EMAIL: ${{ secrets.BINDER_CI_EMAIL }}
+          BINDER_CI_PASSWORD: ${{ secrets.BINDER_CI_PASSWORD }}
+          BINDER_CREATIVE_ADMIN_EMAIL: ${{ secrets.BINDER_CREATIVE_ADMIN_EMAIL }}
+          BINDER_CREATIVE_ADMIN_PASSWORD: ${{ secrets.BINDER_CREATIVE_ADMIN_PASSWORD }}
+          BINDER_TENANTS: ${{ secrets.BINDER_TENANTS }}
+
+      - name: Generate QA report
+        run: npm run qa:report:redis
+        env:
+          REDIS_URL: redis://localhost:16379
+          BINDER_CI_EMAIL: ${{ secrets.BINDER_CI_EMAIL }}
+          BINDER_CI_PASSWORD: ${{ secrets.BINDER_CI_PASSWORD }}
+          BINDER_CREATIVE_ADMIN_EMAIL: ${{ secrets.BINDER_CREATIVE_ADMIN_EMAIL }}
+          BINDER_CREATIVE_ADMIN_PASSWORD: ${{ secrets.BINDER_CREATIVE_ADMIN_PASSWORD }}
+          BINDER_TENANTS: ${{ secrets.BINDER_TENANTS }}
+
+      - name: Deploy report per commit
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.REPORTS_TOKEN }}
+          external_repository: ZaidBinder33labs/auth-qa-reports
+          publish_branch: gh-pages
+          publish_dir: reports/auth/latest
+          destination_dir: reports/${{ github.sha }}
+          keep_files: true
+
+      - name: Deploy latest report
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.REPORTS_TOKEN }}
+          external_repository: ZaidBinder33labs/auth-qa-reports
+          publish_branch: gh-pages
+          publish_dir: reports/auth/latest
+          destination_dir: latest
+          keep_files: true
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-report-${{ github.sha }}
+          path: reports/auth/latest/
+          retention-days: 90

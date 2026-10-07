@@ -1,0 +1,16 @@
+{
+  "name": "@atf/auth-core",
+  "version": "1.0.0",
+  "description": "Authentication lifecycle: login, session, access/refresh tokens, logout",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": { "test": "node --test tests" },
+  "dependencies": {
+    "@atf/tenant-core": "*",
+    "@atf/adapters": "*"
+  },
+  "peerDependencies": {
+    "@atf/concurrency-engine": "*"
+  },
+  "license": "MIT"
+}

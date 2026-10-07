@@ -1,0 +1,9 @@
+{
+  "name": "@atf/env-config",
+  "version": "1.0.0",
+  "description": "Environment descriptors: where a target RUNS (base URL, Redis connection, which credential variables to read, which policy applies)",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": { "test": "node --test tests" },
+  "license": "MIT"
+}

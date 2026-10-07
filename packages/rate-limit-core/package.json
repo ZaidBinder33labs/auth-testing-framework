@@ -1,0 +1,15 @@
+{
+  "name": "@atf/rate-limit-core",
+  "version": "1.0.0",
+  "description": "Rate-limit testing: config, key generation, assertions, thresholds, IPv6, evidence",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": { "test": "node --test tests" },
+  "dependencies": {
+    "@atf/tenant-core": "*",
+    "@atf/token-security": "*",
+    "@atf/reporting": "*",
+    "@atf/redis-observer": "*"
+  },
+  "license": "MIT"
+}

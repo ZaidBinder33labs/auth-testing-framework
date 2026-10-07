@@ -1,0 +1,13 @@
+{
+  "name": "@atf/test-fixtures",
+  "version": "1.0.0",
+  "description": "Deterministic test data and fixtures for self-tests",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": { "test": "node --test tests" },
+  "dependencies": {
+    "@atf/tenant-core": "*",
+    "@atf/auth-core": "*"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,12 @@
+{
+  "name": "session-only",
+  "displayName": "Session only",
+  "description": "The suite may log in, refresh and log out its own test account, and may not write Redis, generate concurrent load, invalidate a refresh token, or wait for a real TTL.",
+  "capabilities": {
+    "mutatesOwnSession": true,
+    "mutatesRedis": false,
+    "concurrentLoad": false,
+    "tokenRotation": false,
+    "ttlWaits": false
+  }
+}

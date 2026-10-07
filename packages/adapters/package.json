@@ -1,0 +1,23 @@
+{
+  "name": "@atf/adapters",
+  "version": "1.0.0",
+  "description": "Pluggable adapters: auth, tenant, api, browser, redis, and mock adapters",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./targets": "./src/targets/index.js",
+    "./package.json": "./package.json"
+  },
+  "type": "commonjs",
+  "scripts": { "test": "node --test tests" },
+  "dependencies": {
+    "@atf/auth-core": "*",
+    "@atf/tenant-core": "*",
+    "@atf/redis-observer": "*",
+    "@atf/concurrency-engine": "*",
+    "@atf/token-security": "*",
+    "@atf/http-transport": "*",
+    "@atf/target-config": "*"
+  },
+  "license": "MIT"
+}

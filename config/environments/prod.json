@@ -1,0 +1,30 @@
+{
+  "name": "prod",
+  "displayName": "Production (read-only, dedicated test account)",
+  "target": "binder",
+  "policy": "read-only",
+  "production": true,
+  "redis": {
+    "mode": "READ_ONLY",
+    "namespace": "qa:prod",
+    "urlEnvVar": "PROD_REDIS_URL",
+    "tls": true,
+    "db": null
+  },
+  "credentials": {
+    "emailEnvVar": "BINDER_PROD_EMAIL",
+    "passwordEnvVar": "BINDER_PROD_PASSWORD",
+    "accountIdentityEnvVar": "BINDER_PROD_ACCOUNT_IDENTITY",
+    "requireDedicatedTestAccount": true,
+    "expectAccountIdentitySuffix": "@qa.example.test"
+  },
+  "verification": {
+    "httpExpected": true,
+    "redisExpected": true
+  },
+  "notes": [
+    "Forces REDIS_MODE=READ_ONLY. An attempt to override it with the REDIS_MODE environment variable is refused, not warned about.",
+    "Refuses to start unless CONFIRM_PRODUCTION_RUN is set to exactly this environment's name.",
+    "Credentials must belong to a dedicated test account. The report states the account identity, never the credential."
+  ]
+}

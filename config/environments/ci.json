@@ -1,0 +1,27 @@
+{
+  "name": "ci",
+  "displayName": "Continuous integration",
+  "target": "binder",
+  "policy": "full",
+  "production": false,
+  "redis": {
+    "mode": "READ_ONLY",
+    "namespace": "qa:ci",
+    "urlEnvVar": "REDIS_URL",
+    "tls": false,
+    "db": "15"
+  },
+  "credentials": {
+    "emailEnvVar": "BINDER_CI_EMAIL",
+    "passwordEnvVar": "BINDER_CI_PASSWORD",
+    "accountIdentityEnvVar": "BINDER_CI_ACCOUNT_IDENTITY"
+  },
+  "verification": {
+    "httpExpected": false,
+    "redisExpected": true
+  },
+  "notes": [
+    "The CI Redis is a throwaway service container, but it is still observed read-only: the suite proves behaviour against it without ever writing to it.",
+    "Real HTTP suites are BLOCKED unless BINDER_TENANTS is supplied as a repository secret."
+  ]
+}

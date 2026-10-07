@@ -1,0 +1,10 @@
+{
+  "name": "@atf/concurrency-engine",
+  "version": "1.0.0",
+  "description": "Concurrent login/refresh/session and shared refresh-lock primitives",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": { "test": "node --test tests" },
+  "dependencies": {},
+  "license": "MIT"
+}

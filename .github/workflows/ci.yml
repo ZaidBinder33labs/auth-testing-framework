@@ -1,67 +1,90 @@
+
 name: Auth QA
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+
   pull_request:
-    branches: [main]
+    branches:
+      - main
+
+  schedule:
+    - cron: '0 4 * * *'
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  test:
+  auth-qa:
+    name: Run Auth QA Tests
     runs-on: ubuntu-latest
 
     services:
       redis:
         image: redis:7-alpine
         ports:
-          - 16379:6379
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      CI: true
+      REDIS_URL: redis://localhost:6379
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'npm'
+          node-version: 20
+          cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Run all tests
-        run: npm run test:all
+      - name: Run Auth QA test suite
+        id: qa_tests
         env:
-          REDIS_URL: redis://localhost:16379
-          REDIS_MODE: READ_ONLY
           BINDER_CI_EMAIL: ${{ secrets.BINDER_CI_EMAIL }}
           BINDER_CI_PASSWORD: ${{ secrets.BINDER_CI_PASSWORD }}
           BINDER_CREATIVE_ADMIN_EMAIL: ${{ secrets.BINDER_CREATIVE_ADMIN_EMAIL }}
           BINDER_CREATIVE_ADMIN_PASSWORD: ${{ secrets.BINDER_CREATIVE_ADMIN_PASSWORD }}
           BINDER_TENANTS: ${{ secrets.BINDER_TENANTS }}
+        run: npm run test:all
 
       - name: Generate QA report
+        if: always()
+        continue-on-error: true
         run: npm run qa:report:redis
-        env:
-          REDIS_URL: redis://localhost:16379
-          BINDER_CI_EMAIL: ${{ secrets.BINDER_CI_EMAIL }}
-          BINDER_CI_PASSWORD: ${{ secrets.BINDER_CI_PASSWORD }}
-          BINDER_CREATIVE_ADMIN_EMAIL: ${{ secrets.BINDER_CREATIVE_ADMIN_EMAIL }}
-          BINDER_CREATIVE_ADMIN_PASSWORD: ${{ secrets.BINDER_CREATIVE_ADMIN_PASSWORD }}
-          BINDER_TENANTS: ${{ secrets.BINDER_TENANTS }}
 
-      - name: Deploy report per commit
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          personal_token: ${{ secrets.REPORTS_TOKEN }}
-          external_repository: ZaidBinder33labs/auth-qa-reports
-          publish_branch: gh-pages
-          publish_dir: reports/auth/latest
-          destination_dir: reports/${{ github.sha }}
-          keep_files: true
+      - name: Package QA report
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p reports/auth/latest
 
-      - name: Deploy latest report
-        uses: peaceiris/actions-gh-pages@v3
+          if [ ! -f reports/auth/latest/index.html ]; then
+            cat > reports/auth/latest/report-unavailable.txt <<'EOF'
+          QA report index.html was not generated.
+          Check the GitHub Actions logs for the failure reason.
+          EOF
+          fi
+
+          cd reports/auth
+          zip -r "$GITHUB_WORKSPACE/auth-qa-report.zip" latest
+
+      - name: Publish latest report
+        if: success() && github.event_name != 'pull_request'
+        uses: peaceiris/actions-gh-pages@v4
         with:
           personal_token: ${{ secrets.REPORTS_TOKEN }}
           external_repository: ZaidBinder33labs/auth-qa-reports
@@ -70,9 +93,47 @@ jobs:
           destination_dir: latest
           keep_files: true
 
-      - name: Upload artifact
+      - name: Publish commit-specific report
+        if: success() && github.event_name != 'pull_request'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ secrets.REPORTS_TOKEN }}
+          external_repository: ZaidBinder33labs/auth-qa-reports
+          publish_branch: gh-pages
+          publish_dir: reports/auth/latest
+          destination_dir: runs/${{ github.sha }}
+          keep_files: true
+
+      - name: Upload QA report artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: qa-report-${{ github.sha }}
-          path: reports/auth/latest/
+          path: auth-qa-report.zip
+          if-no-files-found: warn
           retention-days: 90
+
+      - name: Email QA report on failure
+        if: failure() && github.event_name != 'pull_request'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: 'Auth QA FAILED - ${{ github.repository }}'
+          to: zaid@binder33labs.com
+          from: ${{ secrets.MAIL_FROM }}
+          body: |
+            Auth QA workflow failed.
+
+            Repository: ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Commit: ${{ github.sha }}
+            Trigger: ${{ github.event_name }}
+
+            Check the GitHub Actions run for details.
+            https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          attachments: auth-qa-report.zip

@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 /**
  * Report renderers.
  *
@@ -110,8 +110,8 @@ function renderMarkdown(report) {
   out.push(`| Not run | ${t.notRun} |`);
   out.push(`| Suites executed | ${r.executedSuites} of ${r.configuredSuites} |`);
   out.push(`| Run ID | \`${r.run.runId}\` |`);
-  out.push(`| Started | ${r.run.startedAt} |`);
-  out.push(`| Finished | ${r.run.finishedAt} |`);
+  out.push(`| Started | ${r.run.startedAtIST || r.run.startedAt} |`);
+  out.push(`| Finished | ${r.run.finishedAtIST || r.run.finishedAt} |`);
   out.push(`| Duration | ${r.run.durationMs} ms |`);
   out.push(`| Commit | ${r.run.commit || 'unknown'} |`);
   out.push(`| Branch | ${r.run.branch || 'unknown'} |`);
@@ -309,8 +309,8 @@ function renderHtml(report) {
         <td>${e(x.category)}</td>
         <td class="lvl">${e(x.verification)}</td>
         <td><span class="pill ${e(x.status)}">${e(x.status)}</span></td>
-        <td>${x.durationMs === null ? '—' : e(String(x.durationMs)) + ' ms'}</td>
-        <td>${x.failureMessage ? `<pre>${e(redactString(x.failureMessage))}</pre>` : x.skipReason ? `<span class="note">${e(redactString(x.skipReason))}</span>` : '—'}</td>
+        <td>${x.durationMs === null ? 'â€”' : e(String(x.durationMs)) + ' ms'}</td>
+        <td>${x.failureMessage ? `<pre>${e(redactString(x.failureMessage))}</pre>` : x.skipReason ? `<span class="note">${e(redactString(x.skipReason))}</span>` : 'â€”'}</td>
       </tr>`).join('');
 
   const suiteRows = r.suites.map((s) => `
@@ -348,13 +348,13 @@ function renderHtml(report) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>Binder Auth QA Report — ${e(r.status)}</title>
+<title>Binder Auth QA Report â€” ${e(r.status)}</title>
 <style>${STYLES}</style>
 </head><body><div class="wrap">
 <header>
   <div>
     <h1>Binder Auth QA Dashboard</h1>
-    <p class="note">Run <code>${e(r.run.runId)}</code> · ${e(r.run.environment)} · ${e(r.run.startedAt)} → ${e(r.run.finishedAt)} · ${e(String(r.run.durationMs))} ms · commit ${e(r.run.commit || 'unknown')} · branch ${e(r.run.branch || 'unknown')}</p>
+    <p class="note">Run <code>${e(r.run.runId)}</code> Â· ${e(r.run.environment)} Â· ${e(r.run.startedAt)} â†’ ${e(r.run.finishedAt)} Â· ${e(String(r.run.durationMs))} ms Â· commit ${e(r.run.commit || 'unknown')} Â· branch ${e(r.run.branch || 'unknown')}</p>
   </div>
   <div><span class="badge ${e(r.status)}">${e(r.status)}</span></div>
 </header>
@@ -375,7 +375,7 @@ ${reasonList}
 
 <h2>Test results</h2>
 <div class="controls">
-  <input id="q" type="search" placeholder="Search tests…" aria-label="Search tests">
+  <input id="q" type="search" placeholder="Search testsâ€¦" aria-label="Search tests">
   <select id="fstatus" aria-label="Filter by status"><option value="">All statuses</option>${['passed', 'failed', 'blocked', 'skipped', 'not-run'].map((s) => `<option value="${s}">${s}</option>`).join('')}</select>
   <select id="fsuite" aria-label="Filter by suite"><option value="">All suites</option>${r.suites.map((s) => `<option value="${e(s.id)}">${e(s.name)}</option>`).join('')}</select>
   <select id="fver" aria-label="Filter by verification"><option value="">All levels</option>${Object.keys(r.verificationCoverage || {}).map((v) => `<option value="${e(v)}">${e(v)}</option>`).join('')}</select>

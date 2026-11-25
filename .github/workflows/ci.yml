@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - main
+      - dev
 
   pull_request:
     branches:
       - main
+      - dev
 
   schedule:
     - cron: '0 4 * * *'
@@ -111,3 +113,47 @@ jobs:
           path: auth-qa-report.zip
           if-no-files-found: warn
           retention-days: 90
+
+  prod-scheduled:
+    name: Run Prod Live Tests
+    if: (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run prod suite with prod credentials
+        env:
+          CI: true
+          REDIS_URL: redis://localhost:6379
+          ENV: prod
+          TARGET: binder
+          TARGET_BASE_URL: https://app.binder-os.com
+          BINDER_CI_EMAIL: ${{ secrets.BINDER_PROD_EMAIL }}
+          BINDER_CI_PASSWORD: ${{ secrets.BINDER_PROD_PASSWORD }}
+          BINDER_PROD_EMAIL: ${{ secrets.BINDER_PROD_EMAIL }}
+          BINDER_PROD_PASSWORD: ${{ secrets.BINDER_PROD_PASSWORD }}
+          BINDER_PROD_ACCOUNT_IDENTITY: ${{ secrets.BINDER_PROD_ACCOUNT_IDENTITY }}
+          BINDER_TENANTS: ${{ secrets.BINDER_TENANTS }}
+        run: npm run test:all

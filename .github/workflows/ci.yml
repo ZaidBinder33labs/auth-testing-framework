@@ -1,16 +1,13 @@
-name: Auth QA
+name: Auth QA (Dev)
 
 on:
   push:
     branches:
-      - main
+      - dev
 
   pull_request:
     branches:
-      - main
-
-  schedule:
-    - cron: '0 4 * * *'
+      - dev
 
   workflow_dispatch:
 
@@ -19,7 +16,7 @@ permissions:
 
 jobs:
   auth-qa:
-    name: Run Auth QA Tests
+    name: Run Auth QA Tests (Dev)
     runs-on: ubuntu-latest
 
     services:
@@ -81,7 +78,7 @@ jobs:
           cd reports/auth
           zip -r "$GITHUB_WORKSPACE/auth-qa-report.zip" latest
 
-      - name: Publish latest report
+      - name: Publish latest dev report
         if: success() && github.event_name != 'pull_request'
         uses: peaceiris/actions-gh-pages@v4
         with:
@@ -89,10 +86,10 @@ jobs:
           external_repository: ZaidBinder33labs/auth-qa-reports
           publish_branch: gh-pages
           publish_dir: reports/auth/latest
-          destination_dir: latest
+          destination_dir: dev/latest
           keep_files: true
 
-      - name: Publish commit-specific report
+      - name: Publish commit-specific dev report
         if: success() && github.event_name != 'pull_request'
         uses: peaceiris/actions-gh-pages@v4
         with:
@@ -100,14 +97,14 @@ jobs:
           external_repository: ZaidBinder33labs/auth-qa-reports
           publish_branch: gh-pages
           publish_dir: reports/auth/latest
-          destination_dir: runs/${{ github.sha }}
+          destination_dir: dev/runs/${{ github.sha }}
           keep_files: true
 
       - name: Upload QA report artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: qa-report-${{ github.sha }}
+          name: qa-report-dev-${{ github.sha }}
           path: auth-qa-report.zip
           if-no-files-found: warn
           retention-days: 90
